@@ -1,0 +1,78 @@
+{
+  "resourceType": "CarRentalForm",
+  "ReservationDetails": {
+    "location": {
+      "storeId": "4132",
+      "address": {
+        "street1": "3150 S 160th St",
+        "street2": "",
+        "zipcode": "98188",
+        "city": "SeaTac",
+        "stateCode": "WA"
+      },
+      "displayName": "Hertz SeaTac Airport"
+    },
+    "vehicleDetails": {
+      "make": "Jeep",
+      "model": "Grand Cherokee",
+      "year": "2019",
+      "class": "MID_SUV",
+      "license": {
+        "plateNo": "C0819540",
+        "stateCode": "WA"
+      },
+      "mileage": "1506.5",
+      "rate": {
+        "currency": "USD",
+        "amount": "155.0"
+      }
+    },
+    "reservation": {
+      "startDate": "07/31/2020",
+      "returnDate": "08/02/2020",
+      "primaryDriver": {
+        "firstName": "Jim",
+        "lastName": "Chalmers",
+        "rewardsId": "H1349008",
+        "driversLicense": {
+          "id": "CA980762343",
+          "issuedStateCode": "CA",
+          "expiry": "01/13/2025"
+        },
+        "paymentMethod": {
+          "paymentMethodType": "card",
+          "paymentCard": {
+            "type": "credit",
+            "code": "VISA",
+            "cc_no": "4111111111111111"
+          },
+          "paymentMethodId": "VCCN42133323123"
+        }
+      },
+      "discounts": [
+        {
+          "discountCode": "XRT12",
+          "amount": "12.50",
+          "reason": "Gold Tier Member"
+        }
+      ]
+    },
+    "payment": {
+      "estimatedSubTotal": {
+        "currency": "USD",
+        "amount": "427.50"
+      },
+      "estimatedTax": {
+        "currency": "USD",
+        "amount": "31.87"
+      },
+      "estimatedTotal": {
+        "currency": "USD",
+        "amount": "459.37"
+      },
+      "paymentMethod": {
+        "paymentMethodId": "VCCN42133323123"
+      }
+    }
+  }
+}

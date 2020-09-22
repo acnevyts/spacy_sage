@@ -1,0 +1,95 @@
+{
+  "resourceType": "FlightData",
+  "Passengers": [
+    {
+      "passengerId": "PID1234",
+      "firstName": "Michael",
+      "lastName": "Styve",
+      "homeAirportCode": "DIA",
+      "seatPreference": "Aisle",
+      "frequentFlyerNo": "WXY123",
+      "billingAddress": {
+        "street1": "123 Grant Ave",
+        "street2": "",
+        "city": "Cheyenne",
+        "stateCode": "WY",
+        "zipCode": "65412"
+      },
+      "mealCode": "000",
+      "bags": [
+        { "bagId": "BID123", "overweight": false },
+        { "bagId": "BID111", "overweight": false }
+      ],
+      "seat": "1C",
+      "party": [{ "passengerId": "PID1111" }],
+      "comment": "Michael is flying with Prabhakar with freqflier WXY123"
+    },
+    {
+      "passengerId": "PID1111",
+      "firstName": "Prabhakar",
+      "lastName": "Edward",
+      "homeAirportCode": "MCI",
+      "seatPreference": "Window",
+      "frequentFlyerNo": "WXY111",
+      "billingAddress": {
+        "street1": "111 Main St",
+        "street2": "",
+        "city": "Kansas City",
+        "stateCode": "KS",
+        "zipCode": "66221"
+      },
+      "mealCode": "001",
+      "bags": [{ "bagId": "BID222", "overweight": false }],
+      "seat": "1A",
+      "party": [{ "passengerId": "PID1234" }]
+    },
+    {
+      "passengerId": "PID2222",
+      "firstName": "Ryan",
+      "lastName": "Taherian",
+      "homeAirportCode": "LAX",
+      "seatPreference": "Middle",
+      "frequentFlyerNo": "WXY333",
+      "billingAddress": {
+        "street1": "123 Ocean Ave",
+        "street2": "",
+        "city": "Los Angeles",
+        "stateCode": "CA",
+        "zipCode": "95113"
+      },
+      "mealCode": "002",
+      "bags": [],
+      "seat": "1B"
+    },
+    {
+      "passengerId": "PID45678",
+      "firstName": "James",
+      "lastName": "Chalmers",
+      "homeAirportCode": "LAX",
+      "seatPreference": "Aisle",
+      "DriverLicense": "CA980762343",
+      "frequentFlyerNo": "ABC456789",
+      "billingAddress": {
+        "street1": "345 Montrose Ave",
+        "street2": "",
+        "city": "Los Angeles",
+        "stateCode": "CA",
+        "zipCode": "90003"
+      },
+      "mealCode": "002",
+      "bags": [],
+      "seat": "8C"
+    }
+  ],
+  "Plane": { "make": "Boeing", "model": "787-9", "planeId": "b7879-1234" },
+  "Flight": {
+    "departure": {
+      "airportCode": "LAX",
+      "time": "Fri Jul 31 2020 12:38:58 GMT-0600 (Mountain Daylight Time)"
+    },
+    "arrival": {
+      "airportCode": "SEA",
+      "time": "Fri Jul 31 2020 14:38:58 GMT-0600 (Pacific Daylight Time)"
+    }
+  }
+}

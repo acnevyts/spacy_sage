@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+
+# A sample training component that trains a simple scikit-learn decision tree model.
+# This implementation works in File mode and makes no assumptions about the input file names.
+# Input is specified as CSV with a data point in each row and the labels in the first column.
+
+from __future__ import print_function
+
+import os
+import json
+import dill as pickle
+import sys
+import traceback
+import spacy
+from spacy.util import minibatch, compounding
+
+import random
+
+import warnings
+
+import pandas as pd
+
+import process_json
+
+# These are the paths to where SageMaker mounts interesting things in your container.
+
+prefix = '/opt/ml/'
+
+input_path = prefix + 'input/data'
+output_path = os.path.join(prefix, 'output')
+model_path = os.path.join(prefix, 'model')
+param_path = os.path.join(prefix, 'input/config/hyperparameters.json')
+
+# This algorithm has a single channel of input data called 'training'. Since we run in
+# File mode, the input files are copied to the directory specified here.
+channel_name='training'
+training_path = os.path.join(input_path, channel_name)
+
+def load_training_data(training_path):
+        # Take the set of files and read them all into a single pandas dataframe
+    input_files = [ os.path.join(training_path, file) for file in os.listdir(training_path) ]
+    if len(input_files) == 0:
+        raise ValueError(('There are no files in {}.\n' +
+                            'This usually indicates that the channel ({}) was incorrectly specified,\n' +
+                            'the data specification in S3 was incorrectly specified or the role specified\n' +
+                            'does not have permission to access the data.').format(training_path, channel_name))
+    return process_json.process_data(input_files)
+    # return [ json.loads(file) for file in input_files ]
+
+def add_labels(ner, labels):
+    for label in labels:  
+        ner.add_label(label)  # add new entity label to entity recognizer
+
+
+def spacy_trainer(training_data, labels, model=None, new_model_name="PII_Protect", n_iter=30):
+    """Set up the pipeline and entity recognizer, and train the new entity."""
+    random.seed(0)
+    if model is not None:
+        nlp = spacy.load(model)  # load existing spaCy model
+        print("Loaded model '%s'" % model)
+    else:
+        nlp = spacy.blank("en")  # create blank Language class
+        print("Created blank 'en' model")
+    # Add entity recognizer to model if it's not in the pipeline
+    # nlp.create_pipe works for built-ins that are registered with spaCy
+    print('Model loaded')
+    if "ner" not in nlp.pipe_names:
+        ner = nlp.create_pipe("ner")
+        nlp.add_pipe(ner)
+    # otherwise, get it, so we can add labels to it
+    else:
+        ner = nlp.get_pipe("ner")
+
+    add_labels(ner, labels)
+
+    if model is None:
+        optimizer = nlp.begin_training()
+    else:
+        optimizer = nlp.resume_training()
+
+    move_names = list(ner.move_names)
+    # get names of other pipes to disable them during training
+    pipe_exceptions = ["ner", "trf_wordpiecer", "trf_tok2vec"]
+    other_pipes = [pipe for pipe in nlp.pipe_names if pipe not in pipe_exceptions]
+
+    print('Starting NER training')
+    # only train NER
+    with nlp.disable_pipes(*other_pipes), warnings.catch_warnings():
+        # show warnings for misaligned entity spans once
+        warnings.filterwarnings("once", category=UserWarning, module='spacy')
+
+        sizes = compounding(1.0, 4.0, 1.001)
+        # batch up the examples using spaCy's minibatch
+        for itn in range(n_iter):
+            random.shuffle(training_data)
+            batches = minibatch(training_data, size=sizes)
+            losses = {}
+            for batch in batches:
+                texts, annotations = zip(*batch)
+                nlp.update(texts, annotations, sgd=optimizer, drop=0.35, losses=losses)
+            print("Loss:", losses['ner'])
+    sanity_test(nlp)
+    return nlp
+
+def sanity_test(nlp): 
+    print('Testing...')
+    # test the trained model
+    test_text = 'Passengers billing Address street is "345 Montrose Ave", city is "Los Angeles", state Code is "CA", zip Code is "90003". Passengers passenger Id is "PID45678", first Name is "James", last Name is "Chalmers", home Airport Code is "LAX", seat Preference is "Aisle", Driver License is "CA980762343", frequent Flyer No is "ABC456789", meal Code is "002", seat is "8C". Plane make is "Boeing", model is "787-9", plane Id is "b7879-1234". Flight departure airport Code is "SEA", time is "Mon Aug 3 2020 12:38:58 GMT-0600 (Pacific Daylight Time)". Flight arrival airport Code is "LAX", time is "Mon Aug 3 2020 14:38:58 GMT-0600 (Pacific Daylight Time)". resource Type is "FlightData"'
+    doc = nlp(test_text)
+    print("Entities in '%s'" % test_text)
+    for ent in doc.ents:
+        print(ent.label_, ent.text)
+
+# The function to execute the training.
+def train():
+    print('Starting the training.')
+    try:
+        # Read in any hyperparameters that the user passed with the training job
+        with open(param_path, 'r') as tc:
+            trainingParams = json.load(tc)
+
+        processed_data, labels = load_training_data(training_path)
+
+        # SPACY TRAINER
+            ## Either pass in a prebuild model to extend or NONE to create new one.
+        nlp = spacy_trainer(processed_data, labels, 'en_core_web_lg')
+
+        # save the model
+        pickle.dump(nlp, open(os.path.join(model_path, r'spacy_ner.pkl'), 'wb'))
+        print('Training complete.')
+    except Exception as e:
+        # Write out an error file. This will be returned as the failureReason in the
+        # DescribeTrainingJob result.
+        trc = traceback.format_exc()
+        with open(os.path.join(output_path, 'failure'), 'w') as s:
+            s.write('Exception during training: ' + str(e) + '\n' + trc)
+        # Printing this causes the exception to be in the training job logs, as well.
+        print('Exception during training: ' + str(e) + '\n' + trc, file=sys.stderr)
+        # A non-zero exit code causes the training job to be marked as Failed.
+        sys.exit(255)
+
+if __name__ == '__main__':
+    train()
+
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)

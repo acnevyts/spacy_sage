@@ -1,0 +1,53 @@
+{
+  "resourceType": "GasStationTransaction",
+  "Location": {
+    "storeId": "111",
+    "address": {
+      "street1": "17010 International Blvd",
+      "street2": "",
+      "city": "SeaTac",
+      "stateCode": "WA",
+      "zipCode": "98188"
+    },
+    "pumpId": "111-5"
+  },
+  "TransactionDetails": {
+    "fuel": {
+      "octane": 85,
+      "consumed": {
+        "measurement": "GALLON",
+        "amount": "23.06003"
+      },
+      "price": {
+        "currency": "USD",
+        "amount": "2.36"
+      }
+    },
+    "timeOfPurchase": "Sun Aug 2 2020 20:38:58 GMT-0600 (Pacific Daylight Time)",
+    "payment": {
+      "subtotal": {
+        "currency": "USD",
+        "amount": "54.42"
+      },
+      "fuelTax": {
+        "type": "PG",
+        "currency": "USD",
+        "rate": "0.22",
+        "amount": "5.07"
+      },
+      "transactionTotal": {
+        "currency": "USD",
+        "amount": "59.49"
+      },
+      "paymentMethod": {
+        "paymentMethodType": "card",
+        "card": {
+          "type": "credit",
+          "code": "visa",
+          "number": "4111111111111111",
+          "zipcode": "90003"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "resourceType": "TaxDocument",
+  "ssn": "333-22-1234",
+  "name": "Peter James Chalmers",
+  "fiscal_year": "2019",
+  "address": {
+    "street": ["345 Montrose Ave"],
+    "city": "Los Angeles",
+    "stateCode": "CA",
+    "zipCode": "90003"
+  },
+  "income": "100000"
+}
