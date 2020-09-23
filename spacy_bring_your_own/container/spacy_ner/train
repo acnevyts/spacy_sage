@@ -126,7 +126,10 @@ def train():
         nlp = spacy_trainer(processed_data, labels, 'en_core_web_lg')
 
         # save the model
-        pickle.dump(nlp, open(os.path.join(model_path, r'spacy_ner.pkl'), 'wb'))
+        target = os.path.join(model_path, r'spacy_ner')
+        nlp.to_disk(target)
+        # target = os.path.join(model_path, r'spacy_ner.pkl')
+        # pickle.dump(nlp, open(os.path.join(model_path, r'spacy_ner.pkl'), 'wb'))
         print('Training complete.')
     except Exception as e:
         # Write out an error file. This will be returned as the failureReason in the

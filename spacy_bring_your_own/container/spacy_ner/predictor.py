@@ -31,16 +31,17 @@ class ScoringService(object):
     def get_model(cls):
         """Get the model object for this instance, loading it if it's not already loaded."""
         if cls.model == None:
-            target = os.path.join(model_path, r'spacy_ner.pkl')
-            if os.path.getsize(target) > 0:
-                print(os.path.getsize(target))
-                with open(target, 'rb') as f:
-                    print(f)
-                    cls.model = pickle.Unpickler(f).load()
-            else: 
-                print('FILE EMPTY!')
-                return None
-            # cls.model = spacy.load(os.path.join(model_path, 'spacy_ner'))
+            target = os.path.join(model_path, r'spacy_ner')
+#             target = os.path.join(model_path, r'spacy_ner.pkl')
+#             if os.path.getsize(target) > 0:
+#                 print(os.path.getsize(target))
+#                 with open(target, 'rb') as f:
+#                     print(f)
+#                     cls.model = pickle.Unpickler(f).load()
+#             else: 
+#                 print('FILE EMPTY!')
+#                 return None
+            cls.model = spacy.load(target)
         return cls.model
 
     @classmethod
@@ -54,7 +55,12 @@ class ScoringService(object):
         if not nlp:
             print('NO NLP FOUND')
             return None
-        return nlp('. '.join(process_json.convert_json_to_lines(None, None, input))).ents
+        lines = process_json.convert_json_to_lines(None, None, input)
+        print(lines)
+        if lines:
+            line = '. '.join(lines)
+            print(line)
+            return nlp(line).ents
 
 # The flask app for serving predictions
 app = flask.Flask(__name__)
@@ -89,6 +95,7 @@ def transformation():
 
     # Do the prediction
     predictions = ScoringService.predict(data)
+    print(predictions)
 
     # Convert from numpy back to CSV
     response = {}

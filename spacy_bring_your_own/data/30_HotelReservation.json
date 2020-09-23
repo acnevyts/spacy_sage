@@ -1,0 +1,42 @@
+{
+  "resourceType": "HotelReservation",
+  "ReservationDetails": {
+    "location": {
+      "hotelId": "3312",
+      "address": {
+        "street1": "515 Madison St.",
+        "street2": "",
+        "zipcode": "98104",
+        "city": "Seattle",
+        "stateCode": "WA"
+      },
+      "subBrand": "Reniassance",
+      "hotelDisplayName": "Reniassance Seattle Hotel"
+    },
+    "roomDetails": {
+      "roomCode": "2QC",
+      "roomDisplayText": "2 Queen Suite City Facing",
+      "tags": ["NO_SMOKING", "ADA_ACCESSIBLE"],
+      "roomNumber": "1224",
+      "floor": "12",
+      "isReady": false,
+      "rate": {
+        "currency": "USD",
+        "amount": "295.00"
+      }
+    },
+    "reservation": {
+      "stay": {
+        "checkInDate": "07/31/2020",
+        "checkOutDate": "08/02/2020"
+      },
+      "primaryGuest": {
+        "firstName": "Jim",
+        "lastName": "Chalmers",
+        "rewardsId": "980012319",
+        "cardOnFile": "4111111111111111",
+        "preferences": ["HIGH_FLOOR", "CLOSE_TO_ELEVATOR"]
+      }
+    }
+  }
+}

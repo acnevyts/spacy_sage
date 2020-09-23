@@ -1,0 +1,116 @@
+{
+  "resourceType": "HCGeneral.CareMedicalClinic.PatientAppointment",
+  "version": "1.0.0.0",
+  "PatientAppointment": {
+    "source": "https://www.hl7.org/fhir/appointment-example.html",
+    "resourceType": "Appointment",
+    "id": "HK02826JDE6",
+    "text": {
+      "status": "generated",
+      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">MRI results discussion</div>"
+    },
+    "status": "booked",
+    "serviceCategory": [
+      {
+        "coding": [
+          {
+            "system": "http://example.org/service-category",
+            "code": "gp",
+            "display": "General Practice"
+          }
+        ]
+      }
+    ],
+    "serviceType": [
+      {
+        "coding": [
+          {
+            "code": "52",
+            "display": "General Discussion"
+          }
+        ]
+      }
+    ],
+    "specialty": [
+      {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "394814009",
+            "display": "General practice"
+          }
+        ]
+      }
+    ],
+    "appointmentType": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0276",
+          "code": "FOLLOWUP",
+          "display": "A follow up visit from a previous appointment"
+        }
+      ]
+    },
+    "reasonReference": [
+      {
+        "reference": "Condition/example",
+        "display": "Severe burn of left ear"
+      }
+    ],
+    "priority": 5,
+    "description": "Discussion on the results of your recent MRI",
+    "start": "2013-12-10T09:00:00Z",
+    "end": "2013-12-10T11:00:00Z",
+    "created": "2013-10-10",
+    "comment": "Further expand on the results of the MRI and determine the next actions that may be appropriate.",
+    "basedOn": [
+      {
+        "reference": "ServiceRequest/myringotomy"
+      }
+    ],
+    "participant": [
+      {
+        "actor": {
+          "reference": "Patient",
+          "identifier": "mrnHT87654321Z",
+          "display": "Peter James Chalmers",
+          "governmentIssuedId": [
+            {
+              "type": "DL",
+              "value": "CA980762343"
+            }
+          ]
+        },
+        "required": "required",
+        "status": "accepted"
+      },
+      {
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                "code": "ATND"
+              }
+            ]
+          }
+        ],
+        "actor": {
+          "reference": "Practitioner",
+          "identifier": "prc79232341",
+          "display": "Dr Adam Careful"
+        },
+        "required": "required",
+        "status": "accepted"
+      },
+      {
+        "location": {
+          "reference": "Location/1",
+          "display": "South Wing, second floor"
+        },
+        "required": "required",
+        "status": "accepted"
+      }
+    ]
+  }
+}

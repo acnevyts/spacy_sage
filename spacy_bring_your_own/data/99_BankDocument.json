@@ -1,0 +1,15 @@
+{
+  "resourceType": "BankDocument",
+  "ssn": "333-22-1234",
+  "name": "Peter James Chalmers",
+  "cc_no": "4111111111111111",
+  "routing_number": "1234432112344321",
+  "account_no": "9999888877776666",
+  "fiscal_year": "2019",
+  "address": {
+    "street": ["345 Montrose Ave"],
+    "city": "Los Angeles",
+    "stateCode": "CA",
+    "zipCode": "90003"
+  }
+}
