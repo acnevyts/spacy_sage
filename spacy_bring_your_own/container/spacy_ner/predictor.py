@@ -87,7 +87,7 @@ def transformation():
     # Convert from CSV to pandas
     if flask.request.content_type == 'application/json':
         data = flask.request.get_json()
-        print(type(data), data)
+        payload = json.dumps(data)
     else:
         return flask.Response(response='This predictor only supports JSON data', status=415, mimetype='text/plain')
 
@@ -96,9 +96,13 @@ def transformation():
     # Do the prediction
     predictions = ScoringService.predict(data)
     print(predictions)
+    # reformat 
+    ents = process_json.map_entities(payload, predictions)
+    for ent in ents: 
+        print(payload[ent['start']:ent['end']])
 
     # Convert from numpy back to CSV
     response = {}
-    ents = [(e.text, e.start_char, e.end_char, e.label_) for e in predictions]
+    # ents = [(e.text, e.start_char, e.end_char, e.label_) for e in predictions]
     response['entities'] = ents
-    return jsonify(response)
+    return jsonify(response) 

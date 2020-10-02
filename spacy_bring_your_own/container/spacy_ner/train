@@ -123,7 +123,8 @@ def train():
 
         # SPACY TRAINER
             ## Either pass in a prebuild model to extend or NONE to create new one.
-        nlp = spacy_trainer(processed_data, labels, 'en_core_web_lg')
+        # nlp = spacy_trainer(processed_data, labels, 'en_core_web_lg')
+        nlp = spacy_trainer(processed_data, labels)
 
         # save the model
         target = os.path.join(model_path, r'spacy_ner')

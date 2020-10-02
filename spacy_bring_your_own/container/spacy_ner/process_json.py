@@ -1,20 +1,30 @@
-file_name = '00_PatientAppointmentHL7.json'
-test_json_directory= '../tmp'
-
 import json
 import re 
+import os
 from os import listdir
 from os.path import isfile, join
+import spacy
+
+file_name = '00_PatientAppointmentHL7.json'
+test_json_directory= '../../data'
+local_path = os.path.dirname(__file__)
 
 
-def loadInputFile(file_name, dir=None):
+def loadInputFile(file_name, dir=None, load_json=True):
     if dir:
-        file_name = dir + '/' + file_name
-    print(file_name)
-    return json.loads(open(file_name, "r").read())
+        file_name = join(local_path, dir) + '/' + file_name
+    else:
+        file_name = join(local_path, file_name)
+    text = open(file_name, "r").read()
+    if load_json: 
+        return json.loads(text)
+    else: 
+        return text
 
 def getSourceFiles():
-    path = test_json_directory
+    rel_path = test_json_directory
+    path = join(local_path, rel_path)
+    print(path)
     return sorted([join(path,f) for f in listdir(path) if isfile(join(path, f))])
         
   
@@ -67,6 +77,7 @@ def process_data(input_files=None):
     labels = [] 
     if not input_files:
         input_files = getSourceFiles()
+    print(input_files)
     results = []
     for file in input_files:
         results_local = convert_json_to_lines(file)
@@ -97,7 +108,74 @@ def process_data(input_files=None):
         formatted_data.append((res, {"entities": entities}))
         first_run = False
     return formatted_data, labels
-            
+
+def traverse_tree(data, path, results):
+    if isinstance(data, (list, dict)):
+        if isinstance(data, list):
+            for num, obj in enumerate(data):
+                new_path = ['{}'.format(num)]
+                new_path.extend(path)
+                traverse_tree(obj, new_path, results)
+        else:
+        # continue
+            for key in data:
+                new_path = [key]
+                new_path.extend(path)
+                traverse_tree(data[key], new_path, results)
+    else:
+        if data:
+            new_path = ['{}'.format(data)]
+            new_path.extend(path)
+            results.append(new_path)
+
+def map_entities(payload, entities):
+    retval = []
+    for entity in entities:
+        print(entity)
+        print(entity.text)
+        x = [{
+            "start": m.start(), 
+            "end":m.end(),
+            "text": entity.text,
+            "label": entity.label_
+        } for m in re.finditer(entity.text, payload)]
+        retval.extend(x)
+    return retval
+
+def append_jsonp(path, new):
+    return "{}['{}']".format(path,new)
+
+def build_jsonp(data, entities, path, results):
+    if isinstance(data, dict):
+        for key in data:
+            build_jsonp(data[key], entities, append_jsonp(path, key), results)
+    elif isinstance(data, list):
+        for num, obj in enumerate(data):
+            build_jsonp(obj, entities, append_jsonp(path, num), results)
+    elif isinstance(data, str):
+        tmp = map_entities(data, entities)
+        for obj in tmp:
+            obj['json_path'] = path
+        results = results.extend(tmp)
+
+def map_entities_jsonp(payload, entities):
+    json_data = json.loads(payload)
+    results = []
+    build_jsonp(json_data, entities, "$", results)
+    return results
+
+
+# data = loadInputFile('70_Flightdata_return.json', '../../data/testing_data', False)
+# sample = [{
+#     "text": "PID45678",
+#     "label_": "PASSENGER_ID"
+# }]
+# y = map_entities(data, sample)
+# print(y)
+# print(data[:88])
 
 
 
+# results = []
+# traverse_tree(data, [], results)
+# print(results)

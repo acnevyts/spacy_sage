@@ -19,7 +19,8 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 RUN python3 -m pip install spacy pandas flask gevent gunicorn dill && \
         rm -rf /root/.cache
 
-RUN python3 -m spacy download en_core_web_lg
+# *** Uncomment if we dont want to use blank model to train on ***
+# RUN python3 -m spacy download en_core_web_lg
 
 
 # Set some environment variables. PYTHONUNBUFFERED keeps Python from buffering our standard

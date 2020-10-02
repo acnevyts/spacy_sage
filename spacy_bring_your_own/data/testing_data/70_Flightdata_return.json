@@ -1,0 +1,35 @@
+{
+  "resourceType": "FlightData",
+  "Passengers": [
+    {
+      "passengerId": "PID45678",
+      "firstName": "James",
+      "lastName": "Chalmers",
+      "homeAirportCode": "LAX",
+      "seatPreference": "Aisle",
+      "DriverLicense": "CA980762343",
+      "frequentFlyerNo": "ABC456789",
+      "billingAddress": {
+        "street1": "345 Montrose Ave",
+        "street2": "",
+        "city": "Los Angeles",
+        "stateCode": "CA",
+        "zipCode": "90003"
+      },
+      "mealCode": "002",
+      "bags": [],
+      "seat": "8C"
+    }
+  ],
+  "Plane": { "make": "Boeing", "model": "787-9", "planeId": "b7879-1234" },
+  "Flight": {
+    "departure": {
+      "airportCode": "SEA",
+      "time": "Mon Aug 3 2020 12:38:58 GMT-0600 (Pacific Daylight Time)"
+    },
+    "arrival": {
+      "airportCode": "LAX",
+      "time": "Mon Aug 3 2020 14:38:58 GMT-0600 (Pacific Daylight Time)"
+    }
+  }
+}
