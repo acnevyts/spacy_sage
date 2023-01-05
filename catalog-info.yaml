@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: spacy_sage
+  annotations:
+    github.com/project-slug: acnevyts/spacy_sage
+spec:
+  type: other
+  lifecycle: unknown
+  owner: ai
